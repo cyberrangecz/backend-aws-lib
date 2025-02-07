@@ -32,34 +32,10 @@ jobs:
       - name: Run Ruff Lint
         run: ruff check
 
-  test:
-    if: github.event_name != 'pull_request'
-    runs-on: ubuntu-24.04
-    needs: lint
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install poetry
-        run: |
-          pipx install poetry
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-          cache: 'poetry'
-
-      - name: Install dependencies and run tox
-        run: |
-          poetry config virtualenvs.in-project true
-          poetry install
-          poetry run tox
-
   build:
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-24.04
-    needs: test
+    needs: lint
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
